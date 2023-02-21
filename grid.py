@@ -19,7 +19,7 @@ class Grid:
 
             self.grid.append(row)
 
-        self.path = self.pathFinder((0, 0), (self.row - 1, self.cols - 1))
+        self.path = self.pathFinder((0, 0), (self.rows - 1, self.cols - 1))
         
 
     def draw(self):
@@ -43,21 +43,25 @@ class Grid:
             if (x, y) == end:
                 return path
             
-            for coords in self.validNeighbours(x, y):
-                if coords not in visited:
-                    stack.append(coords)
-                    path.append(coords)
+            for xa, ya in self.validNeighbours(x, y):
+                if (xa, ya) not in visited:
+                    stack.append((xa, ya))
+                    path.append((xa, ya))
+                    visited.add((xa, ya))
             
 
 
-    def validNeighbours(self, x, y) -> list[Tiles]:
+    def validNeighbours(self, x, y) :
         coords = [[0,1], [0,-1], [-1,0], [1,0]]
 
         for dx, dy in coords:
             X, Y = x + dx, y + dy
 
-        if self.grid[X][Y].path:
-            yield (X, Y)
+            if not(0 <= X < self.rows and 0 <= Y < self.cols):
+                continue
+
+            if self.grid[X][Y].path:
+                yield (X, Y)
 
         
 

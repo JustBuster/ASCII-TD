@@ -12,8 +12,10 @@ class Tiles:
     def placeBuilding(self):
         pass
 
-    def placeEnemy(self):
-        pass
+    def placeEnemy(self, enemy):
+        self.onTop = enemy
+        self.img = enemy.img
 
     def removeEnemy(self):
-        pass
+        self.onTop = None
+        self.img = Tiles.tileCollection['path']
