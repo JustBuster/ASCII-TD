@@ -9,13 +9,14 @@ class Tiles:
         
         self.onTop = None
 
-    def placeBuilding(self):
-        pass
+    def placeTower(self, tower):
+        self.onTop = tower
+        self.img = tower.img
 
     def placeEnemy(self, enemy):
         self.onTop = enemy
         self.img = enemy.img
 
-    def removeEnemy(self):
+    def remove(self):
         self.onTop = None
         self.img = Tiles.tileCollection['path']

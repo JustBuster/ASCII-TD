@@ -1,5 +1,5 @@
 class Enemy:
-    def __init__(self, grid, path, hp, attack, img = "ഇ ",) -> None:
+    def __init__(self, grid, path, hp, attack, img = " ඞ") -> None:
         self.hp = hp
         self.attack = attack
         self.img = img
@@ -15,10 +15,11 @@ class Enemy:
         self.grid.grid[x][y].placeEnemy(self)
         if self.current:
             xx, yy = self.current
-            self.grid.grid[xx][yy].removeEnemy()
+            self.grid.grid[xx][yy].remove()
         self.current = (x, y)       
         
     def hit(self, damage):
         self.hp -= damage
         if self.hp <= 0:
             return True
+        
