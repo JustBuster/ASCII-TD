@@ -20,6 +20,7 @@ enemies_onscreen = []
 towers = []
 counter = 0
 wave_count = 0
+enemies.append(waves[wave_count])
 play = True
 pause = 'continue'
 print('''
@@ -77,10 +78,6 @@ while play == True:
     print()
     GRID.draw()
     #The enemy moving loop
-    for i in waves:
-        for j in i:
-            print(len(i))
-            enemies.append(j)
 
     if counter < len(enemies):
         enemies_onscreen.append(enemies[counter])
@@ -88,7 +85,9 @@ while play == True:
 
     else:
         counter = 0
+        enemies = []
         wave_count += 1
+        enemies.append(waves[wave_count])
 
     for i in enemies_onscreen:
         i.move()
