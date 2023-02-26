@@ -1,4 +1,5 @@
 from tiles import Tiles
+from tower import *
 
 
 class Grid:
@@ -28,6 +29,33 @@ class Grid:
                 print(self.grid[i][j].img, end = " ")
             print("\n")
 
+    def addTower(self, type, x, y):
+        if type.lower() == 'archer':
+            return ArcherTower(self, x, y)
+        
+        elif type.lower() == 'mortar':
+            return MortarTower(self, x, y)
+
+    def help(self):
+        print('''
+        The Book of Knowledge
+
+        Types of Towers:
+        ->Archer Tower (۩): The home to two sharp shooting archers sniping the enemy away from far away distance and precision.
+            Stats:
+            Attack: 40
+            Target Type: Single
+            Range: 3
+            Cost: 200
+
+        ->Mortar Tower (Ջ): The explosive lab turned into a killing machine smashing away groups of enemies at once.
+            Stats:
+            Attack: 20
+            Target Type: Group
+            Range: 2
+            Cost: 300
+        ''')
+        
     def pathFinder(self, start, end):
         path = []
         stack = []

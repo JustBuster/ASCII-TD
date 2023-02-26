@@ -1,5 +1,3 @@
-for i in range(self.rows):
-            for j in range(self.cols):
-                print(self.tileCollection["blank"], end = " ")
 
-            print("\n")
+from os import startfile
+startfile('\Rick Roll 10 seconds.mp4')
