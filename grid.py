@@ -1,5 +1,8 @@
 from tiles import Tiles
 from tower import *
+from math import floor
+from random import randint
+from enemy import *
 
 
 class Grid:
@@ -39,21 +42,48 @@ class Grid:
     def help(self):
         print('''
         The Book of Knowledge
-
+        
+        #Each tower has 3 levels and they automatically upgrade every 3 rounds (Level 3 max)
         Types of Towers:
-        ->Archer Tower (۩): The home to two sharp shooting archers sniping the enemy away from far away distance and precision.
+        ->Archer Tower (۩|Ұ|Ѩ): The home to two sharp shooting archers sniping the enemy away from far away distance and precision.
             Stats:
             Attack: 40
             Target Type: Single
             Range: 3
             Cost: 200
 
-        ->Mortar Tower (Ջ): The explosive lab turned into a killing machine smashing away groups of enemies at once.
+        ->Mortar Tower (Ջ|Ө|Ѻ): The explosive lab turned into a killing machine smashing away groups of enemies at once.
             Stats:
             Attack: 20
             Target Type: Group
             Range: 2
             Cost: 300
+
+        ----------------------------------------------------------------------------------------------------------------------------
+        Types of Enemies:
+        -> NPC Amogus (ඞ):
+            Stats:
+            Attack: 5
+            HP: 100
+            Money: 50
+    
+        -> Chonk Amogus (ѾѾ):
+            Stats:
+            Attack: 10
+            HP: 150
+            Money: 75
+
+        -> Mega Amogus (ҦҦ):
+            Stats:
+            Attack: 20
+            HP: 250
+            Money: 125
+
+        -> Imposter (Ӝ):
+            Stats:
+            Attack: 50
+            HP: 500
+            Money: 250
         ''')
         
     def pathFinder(self, start, end):
@@ -89,5 +119,24 @@ class Grid:
             if self.grid[X][Y].path:
                 yield (X, Y)
 
-        
+    def enemyGenerator(self, bias):
 
+        #Bias format [number of enemies, NPCAmogus, Chonk, Mega, Imposter (soon to be implemented)]
+        npcamougus = floor(bias[1])
+        chonk = floor(npcamougus + bias[2])
+        mega = floor(chonk + bias[3])
+        imposter = floor(mega + bias[4])
+        
+        probability = randint(0,100)
+
+        if 0 < probability <= npcamougus:
+            return NPCAmogus(self, self.path)
+        
+        elif npcamougus < probability <= chonk:
+            return ChonkAmogus(self, self.path)
+        
+        elif chonk < probability <= mega:
+            return MegaAmogus(self, self.path)
+        
+        else:
+            return Imposter(self, self.path)

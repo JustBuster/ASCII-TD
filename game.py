@@ -8,23 +8,17 @@ sample_path = [(0, 0), (1, 0), (1, 1), (2, 1), (2, 2), (3, 2), (3, 3), (4, 3), (
 GRID = Grid(sample_path)
 BASE_HP = 100
 CURRENCY = 600
-e = Enemy(GRID, sample_path, 100, 10)
-waves = [
-    [NPCAmogus(GRID, sample_path), NPCAmogus(GRID, sample_path), NPCAmogus(GRID, sample_path), NPCAmogus(GRID, sample_path), ChonkAmogus(GRID, sample_path)] * 3,
-    [NPCAmogus(GRID, sample_path), NPCAmogus(GRID, sample_path), ChonkAmogus(GRID, sample_path)] * 4,
-    [NPCAmogus(GRID, sample_path),  ChonkAmogus(GRID, sample_path)] * 9,
-    [MegaAmogus(GRID, sample_path)] * 5
-]
-enemies = []
+
+waves = [[5, 90, 10, 0, 0], [5, 60, 30, 10, 0], [20, 60, 0, 30, 0], [10, 0, 0, 80, 20]]
 enemies_onscreen = []
 towers = []
 counter = 0
 wave_count = 0
-enemies.append(waves[wave_count])
 play = True
-pause = 'continue'
+pause = True
+
 print('''
-          ____   ____ ___ ___           _____ ____  
+     _    ____   ____ ___ ___           _____ ____  
     / \  / ___| / ___|_ _|_ _|         |_   _|  _ \ 
    / _ \ \___ \| |    | | | |   _____    | | | | | |
   / ___ \ ___) | |___ | | | |  |_____|   | | | |_| |
@@ -49,7 +43,8 @@ print()
 while play == True:
     print("------------------------------------------------------------------")
     GRID.draw()
-    while pause == 'continue':
+    while pause:
+        print('Wave: ', wave_count + 1)
         print('Money: ', CURRENCY)
         coords = eval(input("Select a tile to place a tower(row, col) : "))
         towerType = input("Enter the type of tower you want to select (Archer or Mortar): ")
@@ -66,34 +61,30 @@ while play == True:
                 print('Not sufficient funds available.')
         elif GRID.grid[x][y].path:
             print('Please select a valid tile.')
-
+        print('Money: ', CURRENCY)
         done = input('Type in done to play the game or continue to add more towers : ')
         if done.lower() == 'done':
-            pause = 'done'
+            pause = False
 
         elif done.lower() == 'continue':
-            pause = 'continue'
+            pause = True
     print()
     print("------------------------------------------------------------------")
     print()
     GRID.draw()
-    #The enemy moving loop
+    #Enemies
 
-    if counter < len(enemies):
-        enemies_onscreen.append(enemies[counter])
+    if counter < waves[wave_count][0]:
+        enemies_onscreen.append(GRID.enemyGenerator(waves[wave_count]))
         counter += 1
-
-    else:
-        counter = 0
-        enemies = []
-        wave_count += 1
-        enemies.append(waves[wave_count])
 
     for i in enemies_onscreen:
         i.move()
+        ind = enemies_onscreen.index(i)
         if i.state and i.current == sample_path[-1]:
             BASE_HP -= i.attack
             i.remove()
+            enemies_onscreen.pop(ind)
 
 
     for i in towers:
@@ -103,6 +94,18 @@ while play == True:
             if enemies_to_attack[0].hp <= 0:
                 CURRENCY += enemies_to_attack[0].worth
                 enemies_to_attack[0].remove()
+                enemies_onscreen.pop(enemies_onscreen.index(enemies_to_attack[0]))
+                
+
+    if not enemies_onscreen:
+        pause = True
+        counter = 0
+        wave_count += 1
+        for i in towers:
+            i.life += 1
+            if i.life % 3 == 0 and i.life <= 9:
+                i.upgrade()
+        
 
     
 
@@ -110,15 +113,18 @@ while play == True:
         print('You won! You have unlocked a secret message')
         ans = input('Do you wanna read the secret message? (yes or no)')
         print('Choice is an illusion')
+        sleep(2)
         print('DEEEEEEEEEEEEEEEZ NUTTTTTTTTTTTTTTTSSSSSSSSSSSSSSSSSSSSS YOU GOT RICK ROLLED')
         startfile('important.mp4')
-        
+        play = False
 
     if BASE_HP <= 0:
         print('You lowkey suck at this game, skill issue honestly!')
+        sleep(2)
         print('You got rick rolled!!!!!!!!')
         startfile('important.mp4')
+        play = False
 
     print('Health: ', BASE_HP)
     print('Money: ', CURRENCY)
-    sleep(1)
+    sleep(0.2)

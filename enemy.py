@@ -8,7 +8,7 @@ class Enemy:
         self.current = None
         self.step = 0
         self.state = True #True if alive
-        self.worth = hp//10
+        self.worth = hp//2
 
 
     def draw(self):
@@ -36,7 +36,7 @@ class Enemy:
         x, y = self.current
         self.grid.grid[x][y].remove()
         self.state = False
-        print("Bro Died!") #Remove
+        print("Bro Died!")
         
 
 class NPCAmogus(Enemy):
@@ -49,4 +49,8 @@ class ChonkAmogus(Enemy):
 
 class MegaAmogus(Enemy):
     def __init__(self, grid, path, hp = 250, attack = 20, img="ҦҦ") -> None:
+        super().__init__(grid, path, hp, attack, img)
+
+class Imposter(Enemy):
+    def __init__(self, grid, path, hp = 500, attack = 50, img="Ӝ ") -> None:
         super().__init__(grid, path, hp, attack, img)

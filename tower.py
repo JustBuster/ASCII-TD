@@ -1,5 +1,6 @@
 from enemy import Enemy
 from collections import deque
+import math
 
 
 
@@ -9,11 +10,13 @@ class Tower:
         self.y = y
         self.img = img
         self.grid = grid
+        self.towerRange = towerRange
         self.towerDamage = towerDamage
-        self.rangeSet = self.rangeDefiner(towerRange)
+        self.rangeSet = self.rangeDefiner(self.towerRange)
         if not self.grid.grid[x][y].path:
             self.grid.grid[x][y].placeTower(self)
 
+        self.life = 1
 
     def draw(self):
         return self.img
@@ -32,7 +35,6 @@ class Tower:
     def attack(self, enemy):
         enemy.hit(self.towerDamage)
 
-
     def enemyChecker(self):
         enemies = deque()
         for i in self.rangeSet:
@@ -45,11 +47,30 @@ class Tower:
             enemies.popleft()
 
         return enemies
+    
+    def upgrade(self):
+        self.towerRange += 1
+        self.rangeSet = self.rangeDefiner(self.towerRange)
+        self.towerDamage += math.floor(self.towerDamage * 0.4)
+
+        
 
 class ArcherTower(Tower):
     def __init__(self, grid, x, y, towerRange = 3, towerDamage = 40, img=" ۩") -> None:
         super().__init__(grid, x, y, towerRange , towerDamage, img)
         self.towerCost = 200
+
+    def upgrade(self):
+        super().upgrade()
+        if self.life == 6:
+            self.img = "Ұ "
+            print("۩ --> Ұ")
+            print("Your archer tower on %d, %d upgraded to level 2." % (self.x, self.y))
+
+        elif self.life == 9:
+            self.img = "Ѩ "
+            print("Ұ --> Ѩ")
+            print("Your archer tower on %d, %d upgraded to level 3." % (self.x, self.y))
 
 class MortarTower(Tower):
     def __init__(self, grid, x, y, towerRange = 2, towerDamage = 20, img=" Ջ") -> None:
@@ -65,3 +86,15 @@ class MortarTower(Tower):
         
         for i in enemies_to_attack:        
             super().attack(i)
+
+    def upgrade(self):
+        super().upgrade()
+        if self.life == 6:
+            self.img = "Ө "
+            print("Ջ --> Ө")
+            print("Your archer tower on %d, %d upgraded to level 2." % (self.x, self.y))
+
+        elif self.life == 9:
+            self.img = "Ѻ "
+            print("Ө --> Ѻ")
+            print("Your archer tower on %d, %d upgraded to level 3." % (self.x, self.y))
